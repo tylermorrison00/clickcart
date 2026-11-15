@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/click-cart.html" },
+    { "source": "/index.html", "destination": "/click-cart.html" }
+  ]
+}
