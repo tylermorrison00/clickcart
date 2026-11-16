@@ -913,15 +913,19 @@ document.getElementById('accountBg').addEventListener('click', function(){ openA
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ openAccount(false); closeProduct(); } });
 /* ---------- Admin hub ---------- */
 var ADMIN_EMAIL = 'talhamohsin216@gmail.com';
+var ADMIN_EMAILS = ['talhamohsin216@gmail.com','ikramsaif406@gmail.com'];
+var ADMIN_NAMES = {'talhamohsin216@gmail.com':'Talha Mohsin','ikramsaif406@gmail.com':'Ikram Saif'};
 var currentUser = null;
 var sessionUsers = [];
-function isAdminEmail(email){ return !!email && email.trim().toLowerCase() === ADMIN_EMAIL; }
+function isAdminEmail(email){ return !!email && ADMIN_EMAILS.indexOf(email.trim().toLowerCase()) > -1; }
+function adminNameForEmail(email){ var em = email ? email.trim().toLowerCase() : ''; return ADMIN_NAMES[em] || ''; }
 function rememberUser(name, email){
   var em = email.trim().toLowerCase();
+  var displayName = name || adminNameForEmail(em);
   var found = null;
   sessionUsers.forEach(function(u){ if(u.email === em) found = u; });
-  if(!found){ found = {name: name || em.split('@')[0], email: em}; sessionUsers.push(found); }
-  else if(name){ found.name = name; }
+  if(!found){ found = {name: displayName || em.split('@')[0], email: em}; sessionUsers.push(found); }
+  else if(displayName){ found.name = displayName; }
   currentUser = found;
   updateAdminFab();
 }
@@ -1222,9 +1226,9 @@ document.getElementById('accountForm').addEventListener('submit', function(e){
     toast('Admin login only — this email is not the admin email.');
     return;
   }
-  rememberUser('', email);
+  rememberUser(adminNameForEmail(email), email);
   openAccount(false);
-  toast('Welcome back, Admin — your admin button is at the bottom corner 🎉');
+  toast('Welcome back, ' + (adminNameForEmail(email) || 'Admin') + ' — your admin button is at the bottom corner 🎉');
 });
 document.getElementById('deptBtn').addEventListener('click', function(){ document.getElementById('category').scrollIntoView({behavior:'smooth'}); });
 refreshCartUI();
